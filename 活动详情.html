@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>活动详情 - 川农校园旅游助手</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+           .content-auto {
+                content-visibility: auto;
+            }
+           .text-shadow {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+           .bg-gradient-blue {
+                background: linear-gradient(135deg, #165DFF 0%, #4080FF 100%);
+            }
+           .transition-all-300 {
+                transition: all 0.3s ease;
+            }
+           .card-hover {
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+            }
+           .card-hover:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            } 
+           .hidden {
+                display: none;
+            }
+           .bg-white {
+                background-color: white;
+                border-radius: 8px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+            button {
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+            ul {
+                list-style-type: disc;
+                padding-left: 20px;
+                margin-bottom: 10px;
+            }
+            p strong {
+                display: block;
+                margin-bottom: 5px;
+            }
+           .bg-white > div.hidden {
+                background-color: transparent;
+                border: none;
+                padding: 0;
+            }
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#165DFF',
+                        secondary: '#4080FF',
+                        accent: '#FF7D00',
+                        neutral: '#F5F7FA',
+                        dark: '#1D2129',
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+</head>
+<body class="font-inter bg-gray-50 text-dark">
+    <!-- 导航栏 -->
+    <nav class="fixed w-full bg-white/95 backdrop-blur-sm shadow-sm z-50 transition-all duration-300" id="navbar">
+        <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+                <i class="fa fa-map-marker text-primary text-2xl"></i>
+                <span class="text-xl font-bold text-primary">川农校园旅游助手</span>
+            </div>
+            
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="首页.html#home" class="text-dark hover:text-primary transition-colors">首页</a>
+                <a href="首页.html#nearby" class="text-dark hover:text-primary transition-colors">附近景点</a>
+                <a href="首页.html#routes" class="text-dark hover:text-primary transition-colors">推荐路线</a>
+                <a href="首页.html#events" class="text-dark hover:text-primary transition-colors">校园活动</a>
+                <a href="首页.html#about" class="text-dark hover:text-primary transition-colors">关于我们</a>
+				<a href="首页.htmlcommunity.html" class="text-dark hover:text-primary transition-colors">交流社区</a>
+            </div>
+            
+            <div class="flex items-center space-x-4">
+                <button onclick="location.href='login.html'" class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg transition-all-300 shadow-md hover:shadow-lg">
+                    <i class="fa fa-user-circle mr-2"></i>登录
+                </button>
+                <button class="md:hidden text-dark text-xl" id="menuToggle">
+                    <i class="fa fa-bars"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- 移动端菜单 -->
+        <div class="md:hidden hidden bg-white shadow-lg absolute w-full" id="mobileMenu">
+            <div class="container mx-auto px-4 py-3 flex flex-col space-y-4">
+                <a href="首页.html#home" class="text-dark hover:text-primary transition-colors py-2 border-b border-gray-100">首页</a>
+                <a href="首页.html#nearby" class="text-dark hover:text-primary transition-colors py-2 border-b border-gray-100">附近景点</a>
+                <a href="首页.html#routes" class="text-dark hover:text-primary transition-colors py-2 border-b border-gray-100">推荐路线</a>
+                <a href="首页.html#events" class="text-dark hover:text-primary transition-colors py-2 border-b border-gray-100">校园活动</a>
+                <a href="首页.html#about" class="text-dark hover:text-primary transition-colors py-2">关于我们</a>
+				<a href="首页.htmlcommunity.html" class="text-dark hover:text-primary transition-colors py-2 border-b border-gray-100">交流社区</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 活动详情内容 -->
+    <section class="pt-24 md:pt-32 pb-16 md:pb-24 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-[clamp(1.75rem,3vw,2.5rem)] font-bold text-dark mb-4">活动详情</h2>
+            </div>
+
+            <!-- 青龙湖摄影比赛详情 -->
+            <div class="bg-white rounded-xl overflow-hidden shadow-md card-hover p-8 mb-8">
+                <h3 class="text-xl font-semibold mb-4">青龙湖摄影比赛</h3>
+                <p class="text-gray-600 mb-4">
+                    本次摄影比赛将在青龙湖湿地公园举行，欢迎各位摄影爱好者参加，用镜头捕捉青龙湖的美丽瞬间。活动分为自然风光、人文景观两个组别，专业评委将评选出一、二、三等奖及优秀奖若干。获奖作品将在校园内展出，并获得精美奖品。
+                </p>
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-gray-500 text-sm"><i class="fa fa-clock-o mr-1"></i> 活动时间:6月5日</span>
+                    <span class="text-gray-500 text-sm"><i class="fa fa-map-marker mr-1"></i> 活动地点: 青龙湖湿地公园</span>
+                </div>
+                <h4 class="font-semibold mb-2">参赛要求</h4>
+                <ul class="list-disc list-inside text-gray-600 mb-4">
+                    <li>作品需为在青龙湖湿地公园拍摄的原创照片</li>
+                    <li>每位参赛者最多提交3张作品</li>
+                    <li>作品可以进行简单后期处理，但不得进行合成、添加等大幅度修改</li>
+                    <li>参赛作品需在活动结束后24小时内提交至指定邮箱</li>
+                </ul>
+                <h4 class="font-semibold mb-2">活动安排</h4>
+                <ul class="list-disc list-inside text-gray-600 mb-4">
+                    <li>09:00 - 09:30 集合签到</li>
+                    <li>09:30 - 11:30 自由拍摄</li>
+                    <li>11:30 - 13:00 午餐休息</li>
+                    <li>13:00 - 16:00 继续拍摄</li>
+                    <li>16:00 活动结束</li>
+                </ul>
+                <h4 class="font-semibold mb-2">注意事项</h4>
+                <ul class="list-disc list-inside text-gray-600 mb-4">
+                    <li>请参赛者自带摄影设备和必要的配件</li>
+                    <li>活动期间请注意安全，遵守公园规定</li>
+                    <li>建议穿着舒适的鞋子和衣物</li>
+                    <li>主办方将提供饮用水和午餐</li>
+                </ul>
+                <div class="border-t border-gray-100 pt-4 mt-4">
+                    <p><strong>联系人姓名</strong> 徐涵</p>
+                    <p><strong>主办方</strong> 四川农业大学摄影协会、川农校园旅游助手团队</p>
+                    <p><strong>联系电话</strong> 15284944779</p>
+                    <p><strong>集合地址</strong>四川农业大学成都校区东大门</p>
+                </div>
+            </div>
+
+            <!-- 明蜀王陵历史文化讲座详情 -->
+            <div class="bg-white rounded-xl overflow-hidden shadow-md card-hover p-8 mb-8">
+                <h3 class="text-xl font-semibold mb-4">明蜀王陵历史文化讲座</h3>
+                <p class="text-gray-600 mb-4">
+                    本次活动将组织参观明蜀王陵，并邀请历史文化专家进行现场讲解。明蜀王陵是全国重点文物保护单位，是明代蜀王家族的陵墓群，被誉为"中国古代帝王陵墓的露天博物馆"。通过专家的讲解，我们将深入了解明代蜀王家族的历史和文化。
+                </p>
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-gray-500 text-sm"><i class="fa fa-clock-o mr-1"></i> 活动时间: 6月10日</span>
+                    <span class="text-gray-500 text-sm"><i class="fa fa-map-marker mr-1"></i> 活动地点: 明蜀王陵</span>
+                </div>
+                <h4 class="font-semibold mb-2">活动安排</h4>
+                <ul class="list-disc list-inside text-gray-600 mb-4">
+                    <li>09:00 - 09:30 集合签到</li>
+                    <li>09:30 - 10:30 乘坐大巴前往明蜀王陵</li>
+                    <li>10:30 - 12:00 参观明蜀王陵，专家讲解</li>
+                    <li>12:00 - 13:30 午餐休息</li>
+                    <li>13:30 - 15:00 继续参观，自由交流</li>
+                    <li>15:00 - 16:00 乘坐大巴返回学校</li>
+                </ul>
+                <h4 class="font-semibold mb-2">注意事项</h4>
+                <ul class="list-disc list-inside text-gray-600 mb-4">
+                    <li>请遵守参观秩序，不得触摸文物</li>
+                    <li>活动期间请跟随团队，不要擅自离队</li>
+                    <li>建议穿着舒适的鞋子和衣物</li>
+                    <li>主办方将提供饮用水和午餐</li>
+                </ul>
+                <div class="border-t border-gray-100 pt-4 mt-4">
+                    <p><strong>联系人姓名</strong>周瑞</p>
+                    <p><strong>主办方</strong>川农校园旅游助手团队</p>
+                    <p><strong>联系电话</strong> 13901578266</p>
+                    <p><strong>集合地址</strong> 四川农业大学成都校区西门</p>
+                </div>
+            </div>
+
+            <!-- 四川科技馆科技体验活动详情 -->
+            <div class="bg-white rounded-xl overflow-hidden shadow-md card-hover p-8 mb-8">
+                <h3 class="text-xl font-semibold mb-4">四川科技馆科技体验活动</h3>
+                <p class="text-gray-600 mb-4">
+                    本次活动将组织参观四川科技馆，并体验馆内的各种科技互动项目。四川科技馆是一座集科普、展览、互动体验于一体的科技馆，馆内设有多个主题展厅，展示了丰富的科技成果和科学知识。通过参与互动项目，我们将深入了解科学原理，感受科技的魅力。
+                </p>
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-gray-500 text-sm"><i class="fa fa-clock-o mr-1"></i> 活动时间:6月16日</span>
+                    <span class="text-gray-500 text-sm"><i class="fa fa-map-marker mr-1"></i> 活动地点: 四川科技馆</span>
+                </div>
+                <h4 class="font-semibold mb-2">活动安排</h4>
+                <ul class="list-disc list-inside text-gray-600 mb-4">
+                    <li>09:00 - 09:30 集合签到</li>
+                    <li>09:30 - 10:30 乘坐地铁前往四川科技馆</li>
+                    <li>10:30 - 12:00 参观航天科技展厅</li>
+                    <li>12:00 - 13:30 午餐休息</li>
+                    <li>13:30 - 15:00 参观机器人展厅，体验互动项目</li>
+                    <li>15:00 - 16:30 自由参观其他展厅</li>
+                    <li>16:30 - 17:30 乘坐地铁返回学校</li>
+                </ul>
+                <h4 class="font-semibold mb-2">注意事项</h4>
+                <ul class="list-disc list-inside text-gray-600 mb-4">
+                    <li>请遵守科技馆规定，爱护展品</li>
+                    <li>活动期间请跟随团队，不要擅自离队</li>
+                    <li>建议穿着舒适的鞋子和衣物</li>
+                    <li>请自带午餐和饮用水</li>
+                </ul>
+                <div class="border-t border-gray-100 pt-4 mt-4">
+                    <p><strong>联系人姓名</strong> 张浩</p>
+                    <p><strong>主办方</strong> 四川农业大学计算机系、川农校园旅游助手团队</p>
+                    <p><strong>联系电话</strong> 13700137002</p>
+                    <p><strong>集合地址</strong> 四川农业大学成都校区东三门</p>
+                </div>
+            </div>
+
+            <div class="text-center mt-12">
+                <button onclick="location.href='首页.html#events'" class="bg-primary hover:bg-primary/90 text-white px-8 py-3 rounded-lg transition-all-300 shadow-md hover:shadow-lg">
+                    <i class="fa fa-arrow-left mr-2"></i>返回活动列表
+                </button>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

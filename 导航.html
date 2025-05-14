@@ -1,0 +1,200 @@
+
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+    <title>川农周边景点导航系统</title>
+    <!-- 添加 Playfair Display 字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="导航.css">
+    <script type="text/javascript">
+        window._AMapSecurityConfig = {
+            securityJsCode: '8f1789d77f90bc41a862e8ce0f8daa56',
+        }
+    </script>
+    <script type="text/javascript" src="https://webapi.amap.com/maps?v=2.0&key=41362a36aa55118c6d1419eb90b7bebd&plugin=AMap.PlaceSearch,AMap.AutoComplete,AMap.Driving,AMap.Transfer,AMap.Walking"></script>
+    <script>
+        // 等待页面加载完成
+        document.addEventListener('DOMContentLoaded', function() {
+            // 解析URL参数
+            const urlParams = new URLSearchParams(window.location.search);
+            const startParam = urlParams.get('start');
+            const endParam = urlParams.get('end');
+            
+            // 如果URL中有起点参数，自动填充并搜索
+            if (startParam) {
+                const startInput = document.getElementById('startInput');
+                startInput.value = startParam;
+                
+                // 模拟用户输入并触发自动完成
+                setTimeout(function() {
+                    const event = new Event('input', { bubbles: true });
+                    startInput.dispatchEvent(event);
+                    
+                    // 搜索该位置
+                    searchLocation(startParam, 'start');
+                }, 500);
+            }
+            
+            // 如果URL中有终点参数，自动填充并搜索
+            if (endParam) {
+                const endInput = document.getElementById('endInput');
+                endInput.value = endParam;
+                
+                // 模拟用户输入并触发自动完成
+                setTimeout(function() {
+                    const event = new Event('input', { bubbles: true });
+                    endInput.dispatchEvent(event);
+                    
+                    // 搜索该位置
+                    searchLocation(endParam, 'end');
+                }, 700);
+            }
+            
+            // 搜索位置函数
+            function searchLocation(keyword, type) {
+                AMap.plugin('AMap.PlaceSearch', function() {
+                    const placeSearch = new AMap.PlaceSearch({
+                        city: '全国'
+                    });
+                    
+                    placeSearch.search(keyword, function(status, result) {
+                        if (status === 'complete' && result.poiList.pois.length > 0) {
+                            const poi = result.poiList.pois[0];
+                            
+                            // 创建并触发选择事件
+                            const selectEvent = new CustomEvent('select', {
+                                detail: {
+                                    poi: poi
+                                }
+                            });
+                            
+                            if (type === 'start') {
+                                document.getElementById('startInput').dispatchEvent(selectEvent);
+                            } else {
+                                document.getElementById('endInput').dispatchEvent(selectEvent);
+                            }
+                        }
+                    });
+                });
+            }
+        });
+    </script>
+	<style>
+        /* 新增标题样式 */
+        .new-title {
+            display: block;
+            text-align: center;
+            padding: 20px 0;
+            font-size: 24px;
+            font-weight: bold;
+            color: #165DFF;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        /* 返回首页按钮样式 */
+        .back-to-home {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #165DFF;
+            color: white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        
+        .back-to-home:hover {
+            background-color: #4080FF;
+            transform: scale(1.1);
+        }
+        
+        /* 调整控制面板位置 */
+        #controlPanel {
+            top: 90px; /* 增加顶部间距 */
+            left: 20px;
+        }
+        
+        /* 调整结果面板位置 */
+        #resultPanel {
+            top: 90px; /* 增加顶部间距 */
+            right: 20px;
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            #controlPanel,
+            #resultPanel {
+                top: 130px; /* 移动到标题下方 */
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 标题 -->
+    <h1 class="new-title"><i class="fas fa-map-pin"></i> 川农周边景点导航系统</h1>
+
+    <div id="container"></div>
+    
+    <div id="controlPanel">
+        <div class="panel-header">
+            <h2><i class="fas fa-map-marked-alt"></i> 景点路线查询</h2>
+        </div>
+        <div class="panel-body">
+            <div class="input-group">
+                <label for="startInput"><i class="fas fa-map-marker-alt"></i> 起点</label>
+                <input id="startInput" placeholder="输入起点位置" />
+            </div>
+            <div class="input-group">
+                <label for="endInput"><i class="fas fa-flag-checkered"></i> 景点</label>
+                <input id="endInput" placeholder="输入景点名称" />
+            </div>
+            <div class="input-group">
+                <label for="routeType"><i class="fas fa-route"></i> 路线类型</label>
+                <select id="routeType">
+                    <option value="driving">驾车路线</option>
+                    <option value="transit">公交路线</option>
+                    <option value="walking">步行路线</option>
+                </select>
+            </div>
+            <button id="searchBtn">
+                <i class="fas fa-search"></i> 查询路线
+            </button>
+            <div class="loading" id="loadingIndicator">
+                <div class="spinner"></div>
+                <span>正在查询中...</span>
+            </div>
+        </div>
+    </div>
+    
+    <div id="resultPanel">
+        <div class="panel-header">
+            <h3><i class="fas fa-directions"></i> 景点路线详情</h3>
+            <span class="close-btn" id="closePanelBtn">&times;</span>
+        </div>
+        <div class="panel-content" id="routeContent"></div>
+    </div>
+    
+    <!-- 返回首页按钮 -->
+    <a href="首页.html" class="back-to-home">
+        <i class="fa fa-home"></i>
+    </a>
+
+    <script src="导航.js"></script>
+</body>
+
+</html>

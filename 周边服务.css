@@ -1,0 +1,198 @@
+:root {
+    --primary-color: #2a9d8f;
+    --secondary-color: #264653;
+    --accent-color: #e9c46a;
+    --dark-color: #2b2d42;
+    --light-color: #f8f9fa;
+    --shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    --nav-height: 80px;
+    --panel-margin: 30px; /* 增加间距确保不遮挡导航栏 */
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+    color: var(--dark-color);
+    padding: 0;
+}
+
+nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 9999; /* 确保导航栏在最上层 */
+    transition: all 0.3s ease;
+    height: var(--nav-height);
+}
+
+.main-content {
+    display: flex;
+    width: 100%;
+    padding-top: var(--nav-height);
+    position: relative;
+}
+
+/* 悬浮控制面板样式 */
+#inputSection {
+    width: 300px;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: var(--shadow);
+    padding: 15px;
+    position: absolute;
+    left: var(--panel-margin);
+    top: calc(var(--panel-margin) + 60px); 
+    z-index: 100;
+    max-height: calc(100vh - var(--nav-height) - 2 * var(--panel-margin));
+    overflow-y: auto;
+}
+
+#inputSection h3 {
+    background-color: #699bff;
+    color: white;
+    padding: 5px 10px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+#inputSection label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: 500;
+}
+
+#inputSection input,
+#inputSection select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+#inputSection button {
+    padding: 8px 15px;
+    background: linear-gradient(135deg, #55aaff, var(--secondary-color));
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: var(--transition);
+    margin-bottom: 8px; 
+	margin-top: 15px; 
+    display: block;
+    margin-left: auto;
+    margin-right: auto;}
+
+#inputSection button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(85, 170, 255, 0.4);
+}
+
+/* 悬浮查询结果面板样式 */
+#serviceList {
+    width: 350px;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: var(--shadow);
+    padding: 15px;
+    position: absolute;
+    right: var(--panel-margin);
+    top: calc(var(--panel-margin) + 60px); 
+    z-index: 100;
+    max-height: calc(100vh - var(--nav-height) - 2 * var(--panel-margin));
+    overflow-y: auto;
+}
+
+/* 查询结果面板样式 */
+#serviceList h3 {
+    color: #0080ff;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 2px solid #eee;
+}
+
+.result-stats {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    font-size: 14px;
+    color: #666;
+}
+
+.result-stats span {
+    font-weight: 600;
+}
+
+.service-item {
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #eee;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.service-item:hover {
+    background-color: #f8f9fa;
+    transform: translateX(2px);
+}
+
+.service-item h4 {
+    color: var(--secondary-color);
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+}
+
+.service-item h4 i {
+    margin-right: 8px;
+    color: var(--primary-color);
+}
+
+.service-item .distance {
+    color: #888;
+    font-size: 13px;
+}
+
+#map {
+    width: 100%;
+    height: calc(100vh - var(--nav-height));
+    background-color: white;
+}
+
+#locationError {
+    color: red;
+    margin-top: 10px;
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+    #inputSection, #serviceList {
+        width: calc(100% - 40px);
+        max-height: 250px;
+    }
+    
+    #inputSection {
+        top: var(--panel-margin);
+    }
+    
+    #serviceList {
+        top: calc(250px + 2 * var(--panel-margin));
+    }
+    
+    #map {
+        height: calc(100vh - var(--nav-height));
+        margin-top: 560px;
+    }
+}

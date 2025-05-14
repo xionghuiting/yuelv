@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>川农校园旅游助手</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .bg-gradient-blue {
+                background: linear-gradient(135deg, #165DFF 0%, #4080FF 100%);
+            }
+            .transition-all-300 {
+                transition: all 0.3s ease;
+            }
+            .card-hover {
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+            }
+            .card-hover:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            } 
+			.hidden {
+            display: none;
+        }
+  /* 新增的活动详情特定样式 */
+          .event-card {
+              position: relative;
+              overflow: hidden;
+          }
+          
+          .event-details {
+              background-color: white;
+              border-radius: 0 0 8px 8px;
+              margin-top: -8px;
+              padding: 16px;
+              transition: all 0.3s ease;
+              max-height: 0;
+              opacity: 0;
+              overflow: hidden;
+          }
+          
+          .event-details.active {
+              max-height: 2000px;
+              opacity: 1;
+              padding: 16px;
+              margin-top: 8px;
+          }
+          
+          .event-details-content {
+              border-top: 1px solid #f3f4f6;
+              padding-top: 16px;
+          }
+      }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#165DFF',
+                        secondary: '#4080FF',
+                        accent: '#FF7D00',
+                        neutral: '#F5F7FA',
+                        dark: '#1D2129',
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+</head>
+<body class="font-inter bg-gray-50 text-dark">
+    <!-- 导航栏 -->
+    <nav class="fixed w-full bg-white/95 backdrop-blur-sm shadow-sm z-50 transition-all duration-300" id="navbar">
+        <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+                <i class="fa fa-map-marker text-primary text-2xl"></i>
+                <span class="text-xl font-bold text-primary">川农校园旅游助手</span>
+            </div>
+            
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="#home" class="text-dark hover:text-primary transition-colors">首页</a>
+                <a href="#nearby" class="text-dark hover:text-primary transition-colors">附近景点</a>
+                <a href="#routes" class="text-dark hover:text-primary transition-colors">推荐路线</a>
+                <a href="#events" class="text-dark hover:text-primary transition-colors">校园活动</a>
+                <a href="#about" class="text-dark hover:text-primary transition-colors">关于我们</a>
+				<a href="community.html" class="text-dark hover:text-primary transition-colors">交流社区</a>
+            </div>
+            
+            <div class="flex items-center space-x-4">
+                <button onclick="location.href='login.html'" class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg transition-all-300 shadow-md hover:shadow-lg">
+                                  <i class="fa fa-user-circle mr-2"></i>登录
+                </button>
+                <button class="md:hidden text-dark text-xl" id="menuToggle">
+                                  <i class="fa fa-bars"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- 移动端菜单 -->
+        <div class="md:hidden hidden bg-white shadow-lg absolute w-full" id="mobileMenu">
+            <div class="container mx-auto px-4 py-3 flex flex-col space-y-4">
+                <a href="#home" class="text-dark hover:text-primary transition-colors py-2 border-b border-gray-100">首页</a>
+                <a href="#nearby" class="text-dark hover:text-primary transition-colors py-2 border-b border-gray-100">附近景点</a>
+                <a href="#routes" class="text-dark hover:text-primary transition-colors py-2 border-b border-gray-100">推荐路线</a>
+                <a href="#events" class="text-dark hover:text-primary transition-colors py-2 border-b border-gray-100">校园活动</a>
+                <a href="#about" class="text-dark hover:text-primary transition-colors py-2">关于我们</a>
+				<a href="community.html" class="text-dark hover:text-primary transition-colors py-2 border-b border-gray-100">交流社区</a>
+            </div>
+        </div>
+    </nav>
+<!-- 英雄区域 -->
+<section id="home" class="pt-24 md:pt-32 pb-16 md:pb-24 bg-gradient-blue text-white relative overflow-hidden">
+    <div class="absolute inset-0 opacity-10">
+        <div class="absolute top-0 left-0 w-full h-full bg-[url('https://picsum.photos/1200/800?random=1')] bg-cover bg-center"></div>
+    </div>
+    <div class="container mx-auto px-4 relative z-10">
+        <div class="max-w-3xl mx-auto text-center">
+            <h1 class="text-[clamp(2.5rem,5vw,4rem)] font-bold leading-tight mb-6 text-shadow">
+                探索川农周边，发现城市之美
+            </h1>
+            <p class="text-[clamp(1rem,2vw,1.25rem)] opacity-90 mb-8 max-w-2xl mx-auto">
+                专为四川农业大学成都校区学生打造的旅游助手，一键查询校园周边景点，规划最佳游玩路线，参与校园旅游活动
+            </p>
+            
+            <!-- 修改部分：移除搜索框，仅保留搜索按钮 -->
+            <button onclick="location.href='周边服务.html?start=四川农业大学成都校区'" class="bg-accent hover:bg-accent/90 text-white py-2 px-6 rounded-full transition-all-300 shadow-md hover:shadow-lg">
+                <i class="fa fa-search mr-2"></i>搜索
+            </button>
+            
+            <div class="flex flex-wrap justify-center gap-4 mt-8">
+                <span class="px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full text-sm">
+                    <i class="fa fa-map-marker mr-1"></i> 川农周边
+                </span>
+                <span class="px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full text-sm">
+                    <i class="fa fa-clock-o mr-1"></i> 半天行程
+                </span>
+                <span class="px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full text-sm">
+                    <i class="fa fa-users mr-1"></i> 团体活动
+                </span>
+                <span class="px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full text-sm">
+                    <i class="fa fa-camera mr-1"></i> 拍照打卡
+                </span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="absolute bottom-0 left-0 w-full h-16 bg-gradient-to-t from-gray-50 to-transparent"></div>
+</section>
+
+    <!-- 校园周边景点 -->
+    <section id="nearby" class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-[clamp(1.75rem,3vw,2.5rem)] font-bold text-dark mb-4">校园周边景点</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">探索四川农业大学成都校区周边的自然风光、历史文化和休闲娱乐场所，发现校园之外的精彩</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- 景点卡片1 -->
+                <div class="bg-white rounded-xl overflow-hidden shadow-md card-hover">
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="https://newbbs-fd.zol-img.com.cn/t_s1200x5000/g7/M00/0E/07/ChMkK2Q4twSIAcDgABzzDSVERQYAAO45QMXOrAAHPMl733.jpg" alt="景点图片" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110" />
+                        <div class="absolute top-4 left-4 bg-accent text-white px-3 py-1 rounded-full text-sm font-medium">
+                            2.5公里
+                        </div>
+                        <div class="absolute top-4 right-4 bg-white/90 backdrop-blur-sm text-primary px-3 py-1 rounded-full text-sm font-medium">
+                            <i class="fa fa-star mr-1"></i>4.8
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">青龙湖湿地公园</h3>
+                        <p class="text-gray-600 mb-4">成都市区最大的湿地公园，水域面积广阔，生态环境优美，是散步、骑行和观鸟的好去处。</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-500 text-sm"><i class="fa fa-clock-o mr-1"></i> 开放时间: 06:00-22:00</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 景点卡片2 -->
+                <div class="bg-white rounded-xl overflow-hidden shadow-md card-hover">
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="https://youimg1.c-ctrip.com/target/100c0v000000jwg8tF964.jpg" alt="景点图片" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110" />
+                        <div class="absolute top-4 left-4 bg-accent text-white px-3 py-1 rounded-full text-sm font-medium">
+                            1.8公里
+                        </div>
+                        <div class="absolute top-4 right-4 bg-white/90 backdrop-blur-sm text-primary px-3 py-1 rounded-full text-sm font-medium">
+                            <i class="fa fa-star mr-1"></i>4.6
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">明蜀王陵博物馆</h3>
+                        <p class="text-gray-600 mb-4">一座以明代蜀王陵墓群为主题的博物馆，展示了丰富的历史文物和明代墓葬文化，了解成都历史的好地方。</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-500 text-sm"><i class="fa fa-clock-o mr-1"></i> 开放时间: 09:00-17:00</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 景点卡片3 -->
+                <div class="bg-white rounded-xl overflow-hidden shadow-md card-hover">
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="https://img.pconline.com.cn/images/upload/upc/tx/itbbs/2004/14/c9/202939740_1586843297394_mthumb.jpg" alt="景点图片" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110" />
+                        <div class="absolute top-4 left-4 bg-accent text-white px-3 py-1 rounded-full text-sm font-medium">
+                            3.2公里
+                        </div>
+                        <div class="absolute top-4 right-4 bg-white/90 backdrop-blur-sm text-primary px-3 py-1 rounded-full text-sm font-medium">
+                            <i class="fa fa-star mr-1"></i>4.7
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">宽窄巷子</h3>
+                        <p class="text-gray-600 mb-4">宽窄巷子是成都的一条历史悠久、文化鲜明、商业繁荣的步行街，拥有“中国设计大秀”、“全国示范步行街”等荣誉。在这里，你可以欣赏古朴典雅的院落、品尝美食、参与文化活动、享受慢生活，体验成都的生活美学。</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-500 text-sm"><i class="fa fa-clock-o mr-1"></i> 开放时间:全天</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 景点卡片4 -->
+                <div class="bg-white rounded-xl overflow-hidden shadow-md card-hover">
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="https://ts1.tc.mm.bing.net/th/id/R-C.c7e0ff1f3e4a568ccf0e4ff2a07abce7?rik=VUMRZ2zIjcUfOA&riu=http%3a%2f%2fimgbdb3.bendibao.com%2fcdbdb%2ftour%2f20198%2f30%2f2019830180413_70078.jpg&ehk=%2fnZLlgtQeCPLWgwKTJruwOIxsRv30MIP1WpUBxQJyPQ%3d&risl=&pid=ImgRaw&r=0" alt="景点图片" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110" />
+                        <div class="absolute top-4 left-4 bg-accent text-white px-3 py-1 rounded-full text-sm font-medium">
+                            4.5公里
+                        </div>
+                        <div class="absolute top-4 right-4 bg-white/90 backdrop-blur-sm text-primary px-3 py-1 rounded-full text-sm font-medium">
+                            <i class="fa fa-star mr-1"></i>4.5
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">成都大熊猫繁育研究基地</h3>
+                        <p class="text-gray-600 mb-4">熊猫基地是世界著名的大熊猫迁地保护基地、科研繁育基地、科普教育基地和文化旅游基地，被誉为“国宝的自然天堂，我们的世外桃源”。</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-500 text-sm"><i class="fa fa-clock-o mr-1"></i> 开放时间：8:00-18:00</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 景点卡片5 -->
+                <div class="bg-white rounded-xl overflow-hidden shadow-md card-hover">
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="https://ts1.tc.mm.bing.net/th/id/R-C.b8a39f44bf9a9021f335de378bc1fc8a?rik=g0Xdwh%2fPnZDN8w&riu=http%3a%2f%2fwww.szdbk.com.cn%2fupload%2f202304%2f1681877389663377.png&ehk=jLSwvqrMmQ5DAro3S7tw%2bfxYZq55R9Wn8xPIwuWMGmg%3d&risl=&pid=ImgRaw&r=0" alt="景点图片" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110" />
+                        <div class="absolute top-4 left-4 bg-accent text-white px-3 py-1 rounded-full text-sm font-medium">
+                            5.1公里
+                        </div>
+                        <div class="absolute top-4 right-4 bg-white/90 backdrop-blur-sm text-primary px-3 py-1 rounded-full text-sm font-medium">
+                            <i class="fa fa-star mr-1"></i>4.6
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">成都华润万象城</h3>
+                        <p class="text-gray-600 mb-4">集购物、餐饮、娱乐于一体的大型商业综合体，是休闲购物的好去处。</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-500 text-sm"><i class="fa fa-clock-o mr-1"></i> 开放时间: 10:00-22:00</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 景点卡片6 -->
+                <div class="bg-white rounded-xl overflow-hidden shadow-md card-hover">
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="https://youimg1.c-ctrip.com/target/100u0w000000k4hit4E80.jpg" alt="景点图片" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110" />
+                        <div class="absolute top-4 left-4 bg-accent text-white px-3 py-1 rounded-full text-sm font-medium">
+                            6.3公里
+                        </div>
+                        <div class="absolute top-4 right-4 bg-white/90 backdrop-blur-sm text-primary px-3 py-1 rounded-full text-sm font-medium">
+                            <i class="fa fa-star mr-1"></i>4.8
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">四川科技馆</h3>
+                        <p class="text-gray-600 mb-4">一座集科普、展览、互动体验于一体的科技馆，适合学生和科技爱好者参观学习。</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-500 text-sm"><i class="fa fa-clock-o mr-1"></i> 开放时间: 09:00-17:00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12">
+              <button onclick="location.href='周边服务.html'" class="bg-primary hover:bg-primary/90 text-white px-8 py-3 rounded-lg transition-all-300 shadow-md hover:shadow-lg">
+                     <i class="fa fa-map-o mr-2"></i>查看更多景点
+              </button>
+                
+            </div>
+        </div>
+    </section>
+
+    <!-- 推荐路线 -->
+    <section id="routes" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-[clamp(1.75rem,3vw,2.5rem)] font-bold text-dark mb-4">校园旅游路线推荐</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">根据不同的时间和兴趣，我们为您精心规划了多条校园周边旅游路线，让您的出行更加便捷</p>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- 路线卡片1 -->
+                <div class="bg-white rounded-xl overflow-hidden shadow-md border border-gray-100 card-hover">
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-xl font-semibold">历史文化探索之旅</h3>
+                            <span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm font-medium">
+                                <i class="fa fa-clock-o mr-1"></i> 一天
+                            </span>
+                        </div>
+                        <div class="relative pl-8 mb-6">
+                            <div class="absolute left-0 top-0 h-full w-0.5 bg-primary"></div>
+                            
+                            <div class="mb-6 relative">
+                                <div class="absolute left-[-16px] top-0 w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white">
+                                    <i class="fa fa-flag"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <h4 class="font-medium text-lg">四川农业大学成都校区</h4>
+                                    <p class="text-gray-600 text-sm">上午9:00集合，从校园出发</p>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-6 relative">
+                                <div class="absolute left-[-16px] top-0 w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white">
+                                    <i class="fa fa-building"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <h4 class="font-medium text-lg">十陵博物馆</h4>
+                                    <p class="text-gray-600 text-sm">参观明代蜀王陵墓文物，了解成都历史</p>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-6 relative">
+                                <div class="absolute left-[-16px] top-0 w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white">
+                                    <i class="fa fa-university"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <h4 class="font-medium text-lg">明蜀王陵</h4>
+                                    <p class="text-gray-600 text-sm">游览明代蜀王家族陵墓群，感受历史沧桑</p>
+                                </div>
+                            </div>
+                            
+                            <div class="relative">
+                                <div class="absolute left-[-16px] top-0 w-8 h-8 rounded-full bg-accent flex items-center justify-center text-white">
+                                    <i class="fa fa-cutlery"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <h4 class="font-medium text-lg">特色午餐</h4>
+                                    <p class="text-gray-600 text-sm">品尝当地特色美食</p>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-6 relative">
+                                <div class="absolute left-[-16px] top-0 w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white">
+                                    <i class="fa fa-book"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <h4 class="font-medium text-lg">成都大学</h4>
+                                    <p class="text-gray-600 text-sm">参观校园，感受不同的大学文化</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-between items-center pt-4 border-t border-gray-100">
+                            <div>
+                                <span class="text-gray-500 text-sm"><i class="fa fa-map-marker mr-1"></i> 全程约12公里</span>
+                                <span class="ml-4 text-gray-500 text-sm"><i class="fa fa-money mr-1"></i> 预计花费约100元</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 路线卡片2 -->
+                <div class="bg-white rounded-xl overflow-hidden shadow-md border border-gray-100 card-hover">
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-xl font-semibold">自然风光休闲之旅</h3>
+                            <span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm font-medium">
+                                <i class="fa fa-clock-o mr-1"></i> 半天
+                            </span>
+                        </div>
+                        <div class="relative pl-8 mb-6">
+                            <div class="absolute left-0 top-0 h-full w-0.5 bg-primary"></div>
+                            
+                            <div class="mb-6 relative">
+                                <div class="absolute left-[-16px] top-0 w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white">
+                                    <i class="fa fa-flag"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <h4 class="font-medium text-lg">四川农业大学成都校区</h4>
+                                    <p class="text-gray-600 text-sm">上午10:00集合，从校园出发</p>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-6 relative">
+                                <div class="absolute left-[-16px] top-0 w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white">
+                                    <i class="fa fa-tree"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <h4 class="font-medium text-lg">青龙湖湿地公园</h4>
+                                    <p class="text-gray-600 text-sm">漫步湖边，欣赏自然风光，可选择骑行</p>
+                                </div>
+                            </div>
+                            
+                            <div class="relative">
+                                <div class="absolute left-[-16px] top-0 w-8 h-8 rounded-full bg-accent flex items-center justify-center text-white">
+                                    <i class="fa fa-cutlery"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <h4 class="font-medium text-lg">湖畔餐厅</h4>
+                                    <p class="text-gray-600 text-sm">享用湖鲜美食，欣赏湖景</p>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-6 relative">
+                                <div class="absolute left-[-16px] top-0 w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white">
+                                    <i class="fa fa-camera"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <h4 class="font-medium text-lg">观鸟台</h4>
+                                    <p class="text-gray-600 text-sm">观赏各种鸟类，拍照留念</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-between items-center pt-4 border-t border-gray-100">
+                            <div>
+                                <span class="text-gray-500 text-sm"><i class="fa fa-map-marker mr-1"></i> 全程约8公里</span>
+                                <span class="ml-4 text-gray-500 text-sm"><i class="fa fa-money mr-1"></i> 预计花费约60元</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 路线卡片3 -->
+                <div class="bg-white rounded-xl overflow-hidden shadow-md border border-gray-100 card-hover">
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-xl font-semibold">科技文化体验之旅</h3>
+                            <span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm font-medium">
+                                <i class="fa fa-clock-o mr-1"></i> 一天
+                            </span>
+                        </div>
+                        <div class="relative pl-8 mb-6">
+                            <div class="absolute left-0 top-0 h-full w-0.5 bg-primary"></div>
+                            
+                            <div class="mb-6 relative">
+                                <div class="absolute left-[-16px] top-0 w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white">
+                                    <i class="fa fa-flag"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <h4 class="font-medium text-lg">四川农业大学成都校区</h4>
+                                    <p class="text-gray-600 text-sm">上午9:30集合，乘坐地铁前往</p>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-6 relative">
+                                <div class="absolute left-[-16px] top-0 w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white">
+                                    <i class="fa fa-rocket"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <h4 class="font-medium text-lg">四川科技馆</h4>
+                                    <p class="text-gray-600 text-sm">参观科技展览，体验互动项目</p>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-6 relative">
+                                <div class="absolute left-[-16px] top-0 w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white">
+                                    <i class="fa fa-shopping-bag"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <h4 class="font-medium text-lg">成都东站万象城</h4>
+                                    <p class="text-gray-600 text-sm">购物、餐饮、娱乐一站式体验</p>
+                                </div>
+                            </div>
+                            
+                            <div class="relative">
+                                <div class="absolute left-[-16px] top-0 w-8 h-8 rounded-full bg-accent flex items-center justify-center text-white">
+                                    <i class="fa fa-cutlery"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <h4 class="font-medium text-lg">特色美食街</h4>
+                                    <p class="text-gray-600 text-sm">品尝成都特色小吃</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-between items-center pt-4 border-t border-gray-100">
+                            <div>
+                                <span class="text-gray-500 text-sm"><i class="fa fa-map-marker mr-1"></i> 全程约15公里</span>
+                                <span class="ml-4 text-gray-500 text-sm"><i class="fa fa-money mr-1"></i> 预计花费约150元</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 路线卡片4 -->
+                <div class="bg-white rounded-xl overflow-hidden shadow-md border border-gray-100 card-hover">
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-xl font-semibold">校园周边骑行之旅</h3>
+                            <span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm font-medium">
+                                <i class="fa fa-clock-o mr-1"></i> 半天
+                            </span>
+                        </div>
+                        <div class="relative pl-8 mb-6">
+                            <div class="absolute left-0 top-0 h-full w-0.5 bg-primary"></div>
+                            
+                            <div class="mb-6 relative">
+                                <div class="absolute left-[-16px] top-0 w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white">
+                                    <i class="fa fa-flag"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <h4 class="font-medium text-lg">四川农业大学成都校区</h4>
+                                    <p class="text-gray-600 text-sm">上午10:00集合，租借自行车</p>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-6 relative">
+                                <div class="absolute left-[-16px] top-0 w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white">
+                                    <i class="fa fa-bicycle"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <h4 class="font-medium text-lg">青龙湖绿道</h4>
+                                    <p class="text-gray-600 text-sm">沿湖骑行，欣赏湖光山色</p>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-6 relative">
+                                <div class="absolute left-[-16px] top-0 w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white">
+                                    <i class="fa fa-tree"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <h4 class="font-medium text-lg">生态湿地</h4>
+                                    <p class="text-gray-600 text-sm">参观生态湿地，了解自然生态</p>
+                                </div>
+                            </div>
+                            
+                            <div class="relative">
+                                <div class="absolute left-[-16px] top-0 w-8 h-8 rounded-full bg-accent flex items-center justify-center text-white">
+                                    <i class="fa fa-cutlery"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <h4 class="font-medium text-lg">农家乐午餐</h4>
+                                    <p class="text-gray-600 text-sm">品尝农家菜，体验乡村生活</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-between items-center pt-4 border-t border-gray-100">
+                            <div>
+                                <span class="text-gray-500 text-sm"><i class="fa fa-map-marker mr-1"></i> 全程约20公里</span>
+                                <span class="ml-4 text-gray-500 text-sm"><i class="fa fa-money mr-1"></i> 预计花费约80元</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12">
+             <!-- 首页.html 第253行附近 -->
+             <button onclick="location.href='导航.html?start=四川农业大学成都校区'" class="bg-primary hover:bg-primary/90 text-white px-8 py-3 rounded-lg transition-all-300 shadow-md hover:shadow-lg">
+                 <i class="fa fa-map-o mr-2"></i>查看更多路线
+             </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 校园活动 -->
+    <section id="events" class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-[clamp(1.75rem,3vw,2.5rem)] font-bold text-dark mb-4">校园活动</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">参与丰富多彩的校园旅游活动，结交朋友，共同探索校园周边的精彩</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- 活动卡片1 -->
+                <div class="bg-white rounded-xl shadow-md card-hover">
+                    <div class="relative h-48 overflow-hidden">
+                        <img src="https://pic4.zhimg.com/v2-9e8d9abd23be5a709cd529c47372686d_r.jpg?source=172ae18b" alt="活动图片" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110" />
+                        <div class="absolute top-4 left-4 bg-accent text-white px-3 py-1 rounded-full text-sm font-medium">
+                            本周末
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">青龙湖摄影比赛</h3>
+                        <div class="flex items-center text-gray-500 text-sm mb-4">
+                            <span class="mr-4"><i class="fa fa-calendar mr-1"></i> 6月5日</span>
+                        </div>
+                        <a href="活动详情.html" class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg transition-all-300 shadow-md hover:shadow-lg w-full flex justify-center items-center">
+                            <span>查看活动详情</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 活动卡片2 -->
+                <div class="bg-white rounded-xl shadow-md card-hover">
+                    <div class="relative h-48 overflow-hidden">
+                        <img src="https://www.dpm.org.cn/Uploads/Picture/2020/11/19/s5fb621a271dd2.jpg" alt="活动图片" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110" />
+                        <div class="absolute top-4 left-4 bg-accent text-white px-3 py-1 rounded-full text-sm font-medium">
+                            下周末
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">明蜀王陵历史文化讲座</h3>
+                        <div class="flex items-center text-gray-500 text-sm mb-4">
+                            <span class="mr-4"><i class="fa fa-calendar mr-1"></i> 6月10日</span>
+                        </div>
+                        <a href="活动详情.html" class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg transition-all-300 shadow-md hover:shadow-lg w-full flex justify-center items-center">
+                            <span>查看活动详情</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 活动卡片3 -->
+                <div class="bg-white rounded-xl shadow-md card-hover">
+                    <div class="relative h-48 overflow-hidden">
+                        <img src="https://topic.scol.com.cn/img/image/20180918/20180918152545_7222.jpg" alt="活动图片" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110" />
+                        <div class="absolute top-4 left-4 bg-accent text-white px-3 py-1 rounded-full text-sm font-medium">
+                            下下周末
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">四川科技馆科技体验活动</h3>
+                        <div class="flex items-center text-gray-500 text-sm mb-4">
+                            <span class="mr-4"><i class="fa fa-calendar mr-1"></i> 6月16日</span>
+                        </div>
+                        <a href="活动详情.html" class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg transition-all-300 shadow-md hover:shadow-lg w-full flex justify-center items-center">
+                            <span>查看活动详情</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- 关于我们 -->
+    <section id="about" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h2 class="text-[clamp(1.75rem,3vw,2.5rem)] font-bold text-dark mb-6">关于川农校园旅游助手</h2>
+                    <p class="text-gray-600 mb-6">川农校园旅游助手是专为四川农业大学成都校区学生打造的校园周边旅游信息平台，致力于帮助同学们更好地了解和探索校园周边的旅游资源，规划精彩的课余生活。</p>
+                    <p class="text-gray-600 mb-6">我们提供详细的景点介绍、优化的旅游路线规划以及丰富多彩的校园旅游活动，让每一位川农学子都能轻松发现校园周边的美好。</p>
+                    
+                    <div class="grid grid-cols-2 gap-6 mt-8">
+                        <div class="bg-gray-50 p-6 rounded-xl">
+                            <div class="text-primary text-3xl mb-4">
+                                <i class="fa fa-map-marker"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold mb-2">景点查询</h3>
+                            <p class="text-gray-600">提供校园周边景点的详细信息，可根据个人喜好查询不同类型的景点</p>
+                        </div>
+                        
+                        <div class="bg-gray-50 p-6 rounded-xl">
+                            <div class="text-primary text-3xl mb-4">
+                                <i class="fa fa-compass"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold mb-2">路线规划</h3>
+                            <p class="text-gray-600">多元的游玩路线涵盖不同风格，满足各类旅行偏好，拥有特色自由规划服务</p>
+                        </div>
+                        
+                        <div class="bg-gray-50 p-6 rounded-xl">
+                            <div class="text-primary text-3xl mb-4">
+                                <i class="fa fa-calendar"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold mb-2">活动组织</h3>
+                            <p class="text-gray-600">定期举办校园旅游活动，帮助同学们结交朋友，共同探索</p>
+                        </div>
+                        
+                        <div class="bg-gray-50 p-6 rounded-xl">
+                            <div class="text-primary text-3xl mb-4">
+                                <i class="fa fa-comments"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold mb-2">交流社区</h3>
+                            <p class="text-gray-600">提供旅游经验分享和交流的平台，让旅行更加丰富多彩</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="relative">
+                    <img src="https://dag.sicau.edu.cn/dfiles/3942/upload/201807/20180712164415108.jpg" alt="关于我们" class="w-full h-auto rounded-xl shadow-lg" />
+                    <div class="absolute -bottom-6 -left-6 bg-white p-6 rounded-xl shadow-lg max-w-xs">
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                                <i class="fa fa-users text-xl"></i>
+                            </div>
+                            <div class="ml-4">
+                                <h4 class="font-semibold">已服务超过</h4>
+                                <p class="text-2xl font-bold text-primary">1000+</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-600">川农学子使用我们的平台探索校园周边的精彩</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="bg-dark text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center space-x-2 mb-6">
+                        <i class="fa fa-map-marker text-primary text-2xl"></i>
+                        <span class="text-xl font-bold">川农校园旅游助手</span>
+                    </div>
+                    <p class="text-gray-400 mb-6">探索川农周边，发现城市之美</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-primary transition-colors">
+                            <i class="fa fa-weibo text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-primary transition-colors">
+                            <i class="fa fa-wechat text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-primary transition-colors">
+                            <i class="fa fa-qq text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-6">快速链接</h3>
+                    <ul class="space-y-3">
+                        <li><a href="#home" class="text-gray-400 hover:text-primary transition-colors">首页</a></li>
+                        <li><a href="#nearby" class="text-gray-400 hover:text-primary transition-colors">附近景点</a></li>
+                        <li><a href="#routes" class="text-gray-400 hover:text-primary transition-colors">推荐路线</a></li>
+                        <li><a href="#events" class="text-gray-400 hover:text-primary transition-colors">校园活动</a></li>
+                        <li><a href="#about" class="text-gray-400 hover:text-primary transition-colors">关于我们</a></li>
+						<li><a href="community.html" class="text-gray-400 hover:text-primary transition-colors">交流社区</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-6">联系我们</h3>
+                    <ul class="space-y-3">
+                        <li class="flex items-start">
+                            <i class="fa fa-map-marker text-primary mt-1 mr-3"></i>
+                            <span class="text-gray-400">四川省成都市温江区惠民路211号四川农业大学成都校区</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fa fa-envelope text-primary mr-3"></i>
+                            <span class="text-gray-400">contact@cau-travel.com</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fa fa-phone text-primary mr-3"></i>
+                            <span class="text-gray-400">028-12345678</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-6">下载我们的应用</h3>
+                    <p class="text-gray-400 mb-4">随时随地查询景点信息，获取专属旅行建议</p>
+				</div>
+			</div>
+	    </div>
+  </footer>
+  </body>
+  </html>

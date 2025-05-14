@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>周边景点</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="周边服务.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+           .content-auto {
+                content-visibility: auto;
+            }
+           .text-shadow {
+                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+           .bg-gradient-blue {
+                background: linear-gradient(135deg, #165DFF 0%, #4080FF 100%);
+            }
+           .transition-all-300 {
+                transition: all 0.3s ease;
+            }
+           .card-hover {
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+            }
+           .card-hover:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            }
+           .hidden {
+                display: none;
+            }
+           .bg-white {
+                background-color: white;
+                border-radius: 8px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+            button {
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+            ul {
+                list-style-type: disc;
+                padding-left: 20px;
+                margin-bottom: 10px;
+            }
+            p strong {
+                display: block;
+                margin-bottom: 5px;
+            }
+           .bg-white > div.hidden {
+                background-color: transparent;
+                border: none;
+                padding: 0;
+            }
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#165DFF',
+                        secondary: '#4080FF',
+                        accent: '#FF7D00',
+                        neutral: '#F5F7FA',
+                        dark: '#1D2129',
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <script type="text/javascript">
+        window._AMapSecurityConfig = {
+            securityJsCode: '8f1789d77f90bc41a862e8ce0f8daa56',
+        }
+    </script>
+    <script type="text/javascript" src="https://webapi.amap.com/maps?v=2.0&key=41362a36aa55118c6d1419eb90b7bebd&plugin=AMap.Geolocation,AMap.PlaceSearch"></script>
+</head>
+
+<body class="font-inter bg-gray-50 text-dark">
+    <!-- 导航栏 -->
+    <nav class="fixed top-0 left-0 w-full bg-white/95 backdrop-blur-sm shadow-sm z-9999 transition-all duration-300" id="navbar">
+        <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+                <i class="fa fa-map-marker text-primary text-2xl"></i>
+                <span class="text-xl font-bold text-primary">川农校园旅游助手</span>
+            </div>
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="首页.html#home" class="text-dark hover:text-primary transition-colors">首页</a>
+                <a href="首页.html#nearby" class="text-dark hover:text-primary transition-colors">附近景点</a>
+                <a href="首页.html#routes" class="text-dark hover:text-primary transition-colors">推荐路线</a>
+                <a href="首页.html#events" class="text-dark hover:text-primary transition-colors">校园活动</a>
+                <a href="首页.html#about" class="text-dark hover:text-primary transition-colors">关于我们</a>
+	            <a href="首页.htmlcommunity.html" class="text-dark hover:text-primary transition-colors">交流社区</a>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button onclick="location.href='login.html'" class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg transition-all-300 shadow-md hover:shadow-lg">
+                    <i class="fa fa-user-circle mr-2"></i>登录
+                </button>
+                <button class="md:hidden text-dark text-xl" id="menuToggle">
+                    <i class="fa fa-bars"></i>
+                </button>
+            </div>
+        </div>
+        <!-- 移动端菜单 -->
+        <div class="md:hidden hidden bg-white shadow-lg absolute w-full" id="mobileMenu">
+            <div class="container mx-auto px-4 py-3 flex flex-col space-y-4">
+                <a href="首页.html#home" class="text-dark hover:text-primary transition-colors py-2 border-b border-gray-100">首页</a>
+                <a href="首页.html#nearby" class="text-dark hover:text-primary transition-colors py-2 border-b border-gray-100">附近景点</a>
+                <a href="首页.html#routes" class="text-dark hover:text-primary transition-colors py-2 border-b border-gray-100">推荐路线</a>
+                <a href="首页.html#events" class="text-dark hover:text-primary transition-colors py-2 border-b border-gray-100">校园活动</a>
+                <a href="首页.html#about" class="text-dark hover:text-primary transition-colors py-2">关于我们</a>
+				<a href="首页.htmlcommunity.html" class="text-dark hover:text-primary transition-colors py-2 border-b border-gray-100">交流社区</a>
+            </div>
+        </div>
+    </nav>
+    <!-- 主要内容区域 -->
+    <div class="main-content">
+        <!-- 悬浮控制面板 -->
+        <div id="inputSection">
+            <h3>附近景点查询</h3>
+            <label for="keyword"><i class="fas fa-map-marker-alt"></i>景点类型/名称:</label>
+            <input type="text" id="keyword" value="公园,博物馆,古迹,自然风光">
+            <label for="distance"><i class="fas fa-ruler"></i> 查找距离(米):</label>
+            <input type="number" id="distance" value="5000">
+            <button id="searchBtn">查找周边</button>
+			  <div id="keywordSuggestions" class="absolute bg-white shadow-lg rounded-md mt-1 w-full max-h-60 overflow-y-auto z-50 hidden"></div>
+			        </div>
+			        
+        <!-- 悬浮查询结果面板 -->
+        <div id="serviceList">
+            <h3>周边景点</h3>
+            <div class="result-stats">
+                <span>找到 <strong id="result-count">0</strong> 个景点</span>   
+            </div>
+            
+            <!-- 景点列表（初始为空，由JS动态填充） -->
+            <div id="景点列表">
+                <div class="text-center text-gray-500 py-10">
+                    <i class="fa fa-map-o text-4xl mb-3"></i>
+                    <p>请点击"查找周边"按钮开始搜索</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 地图 -->
+        <div id="map"></div>
+        
+        <div id="locationError"></div>
+    </div>
+    <script src="周边服务.js"></script>
+</body>
+
+</html>
