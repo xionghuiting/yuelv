@@ -88,7 +88,7 @@ async function login() {
         // 3秒后跳转到首页界面
         setTimeout(() => {
             successToast.classList.add('translate-y-20', 'opacity-0');
-            window.location.href = '首页.html'; // 确保路径正确
+            window.location.href = 'index.html'; // 确保路径正确
         }, 3000);
     } catch (error) {
         console.error('登录过程中发生错误:', error);
